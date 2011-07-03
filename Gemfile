@@ -13,13 +13,14 @@ gem 'coffee-script'
 gem 'uglifier'
 
 gem 'jquery-rails'
-gem 'haml'
+gem 'haml-rails'
 
 group :test do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'mocha'
+  gem 'rails3-generators'
 end
 
 # Use unicorn as the web server
