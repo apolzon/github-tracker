@@ -14,6 +14,13 @@ gem 'uglifier'
 
 gem 'jquery-rails'
 
+group :test do
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'factory_girl_rails'
+  gem 'mocha'
+end
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
