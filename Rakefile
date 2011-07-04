@@ -5,3 +5,10 @@
 require File.expand_path('../config/application', __FILE__)
 
 GithubTracker::Application.load_tasks
+
+task :default => :spec
+require 'rspec'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:test) do |spec|
+  spec.pattern = "spec/**/*_spec.rb"
+end
