@@ -1,5 +1,5 @@
 %h1
   = "Welcome #{current_user.email}"
 %h2 Your Projects
-= @projects.each do |p|
+- @projects.each do |p|
   = link_to p.name, p
