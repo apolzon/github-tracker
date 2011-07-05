@@ -21,6 +21,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'mocha'
   gem 'rails3-generators'
+  gem 'rspec_tag_matchers'
 end
 
 # Use unicorn as the web server

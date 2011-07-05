@@ -3,4 +3,5 @@
 Factory.define :user do |f|
   f.name "MyString"
   f.email "MyString"
+  f.password "mypassword"
 end
