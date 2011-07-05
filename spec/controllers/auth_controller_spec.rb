@@ -49,5 +49,12 @@ describe AuthController do
       response.should redirect_to login_auth_path
     end
   end
+  describe "#register" do
+    it "shows a registration form" do
+      get :register
+      response.should be_success
+      response.should have_tag "form"
+    end
+  end
 
 end

@@ -1,0 +1,19 @@
+= form_tag registrations_path do
+  .field
+    %label
+      Name
+    = text_field_tag :name
+  .field
+    %label
+      Email
+    = text_field_tag :email
+  .field
+    %label
+      Password
+    = text_field_tag :password
+  .field
+    %label
+      Password Confirmation
+    = text_field_tag :password_confirmation
+  .actions
+    = submit_tag 'Save'

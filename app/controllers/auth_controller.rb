@@ -1,5 +1,6 @@
 class AuthController < ApplicationController
-  skip_before_filter :check_authentication, :only => [:login, :authenticate]
+  skip_before_filter :check_authentication, :only => [:login, :authenticate, :register]
+
   def login
 
   end
@@ -21,5 +22,9 @@ class AuthController < ApplicationController
   def logout
     session[:user_id] = nil
     redirect_to login_auth_path
+  end
+
+  def register
+
   end
 end
