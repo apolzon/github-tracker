@@ -24,8 +24,8 @@
     %label
       Password Confirmation
     = f.password_field :password_confirmation
-    - if @user.errors[:password_confirmation].present?
+    - if @user.errors[:password_digest].present?
       .errors
-        = @user.errors[:password_confirmation].join(", ")
+        = @user.errors[:password_digest].join(", ")
   .actions
     = f.submit 'register'
