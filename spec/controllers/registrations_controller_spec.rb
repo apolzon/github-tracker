@@ -7,6 +7,7 @@ describe RegistrationsController do
       get :new
       response.should be_success
       response.should have_tag "form"
+      assigns(:user).should be_a User
     end
   end
 
@@ -14,27 +15,27 @@ describe RegistrationsController do
     context "with valid params" do
       it "creates a new user" do
         expect {
-          post :create, :name => "me", :email => "a@a.com", :password => "asdf", :password_confirmation => "asdf"
-        }.to change(User.all, :count).by(1)
-        response.should redirect_to confirm_registrations_path
+          post :create, {:user => {:name => "me", :email => "a@a.com", :password => "asdf", :password_confirmation => "asdf"}}
+        }.to change(User, :count).by(1)
+        response.should redirect_to login_auth_path
       end
 
     end
     context "with invalid param" do
       it "does not create a new user" do
         expect {
-          post :create, :name => "", :email => "", :password => "bunk", :password_confirmation => "bunker"
+          post :create, {:user => {:name => "", :email => "", :password => "bunk", :password_confirmation => "bunker"}}
         }.to change(User.all, :count).by(0)
       end
       it "re-renders the registration form with errors" do
-        post :create, :name => "", :email => "", :password => "", :password_confirmation => ""
+        post :create, {:user => {:name => "", :email => "", :password => "", :password_confirmation => ""}}
         response.body.should have_content "Name can't be blank"
         response.body.should have_content "Email can't be blank"
         response.body.should have_content "Password can't be blank"
       end
       it "verifies confirmation of password" do
-        post :create, :name => "asdf", :email => "a@a.com", :password => "asdf", :password_confirmation => "asd2"
-        response.body.should have_content "Password does not match"
+        post :create, {:user => {:name => "asdf", :email => "a@a.com", :password => "asdf", :password_confirmation => "asd2"}}
+        response.body.should have_content "doesn't match confirmation"
       end
 
     end

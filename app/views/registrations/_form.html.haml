@@ -1,19 +1,31 @@
-= form_tag registrations_path do
+= form_for @user, :url => registrations_path do |f|
   .field
     %label
       Name
-    = text_field_tag :name
+    =  f.text_field :name
+    - if @user.errors[:name].present?
+      .errors
+        = @user.errors[:name].join(", ")
   .field
     %label
       Email
-    = text_field_tag :email
+    = f.text_field :email
+    - if @user.errors[:email].present?
+      .errors
+        = @user.errors[:email].join(", ")
   .field
     %label
       Password
-    = text_field_tag :password
+    = f.password_field :password
+    - if @user.errors[:password].present?
+      .errors
+        = @user.errors[:password].join(", ")
   .field
     %label
       Password Confirmation
-    = text_field_tag :password_confirmation
+    = f.password_field :password_confirmation
+    - if @user.errors[:password_confirmation].present?
+      .errors
+        = @user.errors[:password_confirmation].join(", ")
   .actions
-    = submit_tag 'Save'
+    = f.submit 'register'

@@ -7,6 +7,15 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <%- flash.keys.each do |key| %>
+    <div id="<%= key %>">
+      <%- if flash[key].is_a? Array %>
+        <%=h flash[key].join("<br/>") %>
+      <%- else %>
+        <%= flash[key] %>
+      <%- end %>
+    </div>
+  <%- end %>
 
 <%= yield %>
 

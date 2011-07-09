@@ -2,6 +2,6 @@
 
 Factory.define :user do |f|
   f.name "MyString"
-  f.email "MyString"
+  f.sequence(:email) {|n| "MyString#{n}"}
   f.password "mypassword"
 end
