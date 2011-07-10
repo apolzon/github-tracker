@@ -1,0 +1,2 @@
+class PivotalProject < Project
+end

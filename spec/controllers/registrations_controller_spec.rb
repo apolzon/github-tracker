@@ -40,7 +40,7 @@ describe RegistrationsController do
       end
       it "require verifications of password" do
         post :create, {:user => {:name => "asdf", :email => "a@a.com", :password => "asdf"}}
-        response.body.should have_content "confirmation can't be blank"
+        response.body.should have_content "can't be blank"
       end
 
     end

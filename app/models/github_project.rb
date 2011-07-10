@@ -1,0 +1,2 @@
+class GithubProject < Project
+end
