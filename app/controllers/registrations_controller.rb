@@ -15,7 +15,6 @@ class RegistrationsController < ApplicationController
         flash[:notice] = "Registered successfully. Please login."
         redirect_to login_auth_path
       else
-        flash[:error] = @user.errors.full_messages.join(", ")
         render :new
       end
     end

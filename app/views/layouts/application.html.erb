@@ -7,6 +7,9 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <%- if current_user.present? %>
+    <%= link_to 'logout', logout_auth_path, :method => :delete %>
+  <%- end %>
   <%- flash.keys.each do |key| %>
     <div id="<%= key %>">
       <%- if flash[key].is_a? Array %>

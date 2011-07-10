@@ -29,6 +29,7 @@ describe RegistrationsController do
       end
       it "re-renders the registration form with errors" do
         post :create, {:user => {:name => "", :email => "", :password => "", :password_confirmation => ""}}
+        response.body.should have_content "Registration failed."
         response.body.should have_content "Name can't be blank"
         response.body.should have_content "Email can't be blank"
         response.body.should have_content "Password can't be blank"
@@ -36,6 +37,10 @@ describe RegistrationsController do
       it "verifies confirmation of password" do
         post :create, {:user => {:name => "asdf", :email => "a@a.com", :password => "asdf", :password_confirmation => "asd2"}}
         response.body.should have_content "doesn't match confirmation"
+      end
+      it "require verifications of password" do
+        post :create, {:user => {:name => "asdf", :email => "a@a.com", :password => "asdf"}}
+        response.body.should have_content "confirmation can't be blank"
       end
 
     end

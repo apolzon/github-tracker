@@ -13,7 +13,7 @@ describe AuthController do
   end
   describe "#authenticate" do
     it "logs the user in" do
-      user = Factory :user, :password => "asdf"
+      user = Factory :user, :password => "asdf", :password_confirmation => "asdf"
       post :authenticate, :email => user.email, :password => "asdf"
       response.should redirect_to(welcome_auth_path)
     end
@@ -21,7 +21,7 @@ describe AuthController do
   describe "#welcome" do
     context "while logged in" do
       it "displays the users projects" do
-        user = Factory :user, :password => "asdf"
+        user = Factory :user, :password => "asdf", :password_confirmation => "asdf"
         project = Factory :project, :user => user
         project2 = Factory :project, :user => user
         post :authenticate, :email => user.email, :password => "asdf"
@@ -42,7 +42,7 @@ describe AuthController do
   end
   describe "#logout" do
     it "logs the user out" do
-      user = Factory :user, :password => "asdf"
+      user = Factory :user, :password => "asdf", :password_confirmation => "asdf"
       post :authenticate, :email => user.email, :password => "asdf"
       delete :logout, :id => user.id
       get :welcome

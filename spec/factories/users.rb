@@ -4,4 +4,5 @@ Factory.define :user do |f|
   f.name "MyString"
   f.sequence(:email) {|n| "MyString#{n}"}
   f.password "mypassword"
+  f.password_confirmation "mypassword"
 end

@@ -1,4 +1,6 @@
 = form_for @user, :url => registrations_path do |f|
+  %pre
+    = @user.errors.full_messages.join(", ")
   .field
     %label
       Name
@@ -24,8 +26,8 @@
     %label
       Password Confirmation
     = f.password_field :password_confirmation
-    - if @user.errors[:password_digest].present?
+    - if @user.errors[:password_confirmation].present?
       .errors
-        = @user.errors[:password_digest].join(", ")
+        = @user.errors[:password_confirmation].join(", ")
   .actions
     = f.submit 'register'
