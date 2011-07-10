@@ -1,26 +1,26 @@
 = form_for @user, :url => registrations_path do |f|
-  .field
+  %fieldset
     %label
       Name
     =  f.text_field :name
     - if @user.errors[:name].present?
       .errors
         = @user.errors[:name].join(", ")
-  .field
+  %fieldset
     %label
       Email
     = f.text_field :email
     - if @user.errors[:email].present?
       .errors
         = @user.errors[:email].join(", ")
-  .field
+  %fieldset
     %label
       Password
     = f.password_field :password
     - if @user.errors[:password].present?
       .errors
         = @user.errors[:password].join(", ")
-  .field
+  %fieldset
     %label
       Password Confirmation
     = f.password_field :password_confirmation
