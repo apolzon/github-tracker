@@ -1,0 +1,18 @@
+!!!
+%head
+  %title
+    GitubTracker
+  = stylesheet_link_tag :application
+  = javascript_include_tag :application
+  = csrf_meta_tags
+
+.body
+  - if current_user.present?
+    = link_to 'logout', logout_auth_path, :method => :delete
+  - flash.keys.each do |key|
+    %div{:id => "#{key}"}
+      - if flash[key].is_a? Array
+        != flash[key].join("<br/>")
+      - else
+        = flash[key]
+  = yield
