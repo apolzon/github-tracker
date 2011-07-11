@@ -22,8 +22,8 @@ describe AuthController do
     context "while logged in" do
       it "displays the users projects" do
         user = Factory :user, :password => "asdf", :password_confirmation => "asdf"
-        project = Factory :project, :user => user
-        project2 = Factory :project, :user => user
+        project = Factory :github_project, :user => user
+        project2 = Factory :pivotal_project, :user => user
         post :authenticate, :email => user.email, :password => "asdf"
         get :welcome
         response.should be_success

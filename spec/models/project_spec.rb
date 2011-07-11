@@ -29,4 +29,11 @@ describe Project do
       Project.for_user(other_user).all.should_not include(my_project)
     end
   end
+  describe '.select_options' do
+    it "returns an appropriate array containing all subclasses" do
+      options = Project.select_options
+      options.should include(['Pivotal Project', 'PivotalProject'])
+      options.should include(['Github Project', 'GithubProject'])
+    end
+  end
 end

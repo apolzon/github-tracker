@@ -33,7 +33,11 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = Project.new(params[:project])
+    if params[:project][:type]
+      @project = params[:project][:type].constantize.new params[:project]
+    else
+      @project = Project.new params[:project]
+    end
 
     respond_to do |format|
       if @project.save
@@ -49,6 +53,11 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.for_user(current_user).find_by_id(params[:id])
     redirect_to '/auth/not_authorized' and return unless @project
+
+    if params[:project][:type] && @project.type != params[:project][:type]
+      flash[:error] = "Save failed. Cannot modify existing project's type"
+      render action: "edit" and return
+    end
 
     respond_to do |format|
       if @project.update_attributes(params[:project])

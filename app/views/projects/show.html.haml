@@ -1,11 +1,6 @@
 %p#notice= notice
 
-%p
-  %b Name:
-  = @project.name
-%p
-  %b Url:
-  = @project.url
+= render :partial => @project.type.underscore, :object => @project
 
 = link_to 'Edit', edit_project_path(@project)
 \|

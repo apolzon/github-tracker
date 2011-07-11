@@ -8,45 +8,55 @@ describe ProjectsController do
   render_views
 
   describe "#index" do
-    it "assigns all projects as @projects" do
-      stub_login_user
-      project = Factory.build(:project, {:user => @user, :id => 1})
-      Project.expects(:for_user).returns(mock(:all => [project]))
-      get :index
-      assigns(:projects).should == [project]
-      response.body.should match /#{project.name}/
-      response.body.should match /#{project.url}/
+    context "with normal projects" do
+      it "assigns all projects as @projects" do
+        stub_login_user
+        project = Factory.build(:github_project, {:user => @user, :id => 1})
+        Project.expects(:for_user).returns(mock(:all => [project]))
+        get :index
+        assigns(:projects).should == [project]
+        response.body.should match "#{project.name}"
+        response.body.should match "#{project.url}"
+      end
+      it "doesn't show other user's projects" do
+        user = Factory :user
+        controller.stubs(:current_user => user)
+        other_user = Factory :user
+        my_project = Factory(:github_project, :user => user)
+        not_my_project = Factory(:github_project, :user => other_user)
+        controller.stubs(:current_user => user)
+        get :index
+        assigns(:projects).should include(my_project)
+        assigns(:projects).should_not include(not_my_project)
+      end
     end
-    it "doesn't show other user's projects" do
-      user = Factory :user
-      controller.stubs(:current_user => user)
-      other_user = Factory :user
-      my_project = Factory(:project, :user => user)
-      not_my_project = Factory(:project, :user => other_user)
-      controller.stubs(:current_user => user)
-      get :index
-      assigns(:projects).should include(my_project)
-      assigns(:projects).should_not include(not_my_project)
+    context "with sti projects" do
+      pending "implement me"
     end
   end
 
   describe "#show" do
-    it "assigns the requested project as @project" do
-      stub_login_user
-      project = Factory.build(:project, :id => 1, :user => @user)
-      Project.expects(:for_user).returns(mock(:find_by_id => project))
-      get :show, :id => project.to_param
-      assigns(:project).should == project
-      response.body.should match /#{project.name}/
-      response.body.should match /#{project.url}/
-    end
-    it "doesn't display projects I can't access" do
-      user = Factory(:user)
-      controller.stubs(:current_user => user)
-      other_user = Factory(:user)
-      not_my_project = Factory(:project, :user => other_user)
-      get :show, :id => not_my_project.to_param
-      response.should be_redirect
+    context "rendering sti projects" do
+      it "doesn't display projects I can't access" do
+        user = Factory(:user)
+        controller.stubs(:current_user => user)
+        other_user = Factory(:user)
+        not_my_project = Factory(:github_project, :user => other_user)
+        get :show, :id => not_my_project.to_param
+        response.should be_redirect
+      end
+      it "uses the model's view" do
+        stub_login_user
+        github_project = Factory :github_project, :user => @user
+        get :show, :id => github_project.to_param
+        response.body.should have_content "Github Project"
+        response.should render_template "github_project"
+
+        pivotal_project = Factory :pivotal_project, :user => @user
+        get :show, :id => pivotal_project.to_param
+        response.body.should have_content "Pivotal Project"
+        response.should render_template "pivotal_project"
+      end
     end
   end
 
@@ -56,17 +66,36 @@ describe ProjectsController do
       get :new
       assigns(:project).should be_a_new(Project)
     end
+    it "renders a dropdown to select a project type" do
+      stub_login_user
+      get :new
+      response.should have_tag "select#project_type"
+      response.should have_tag "option[value='PivotalProject']"
+      response.should have_tag "option[value='GithubProject']"
+    end
   end
 
   describe "#edit" do
-    it "assigns the requested project as @project" do
-      stub_login_user
-      project = Factory.build(:project, :id => 1, :user => @user)
-      Project.expects(:for_user).returns(mock(:find_by_id => project))
-      get :edit, :id => project.to_param
-      assigns(:project).should == project
-      response.body.should match /#{project.name}/
-      response.body.should match /#{project.url}/
+    context "editing a normal project" do
+      it "assigns the requested project as @project" do
+        stub_login_user
+        project = Factory.build(:github_project, :id => 1, :user => @user)
+        Project.expects(:for_user).returns(mock(:find_by_id => project))
+        get :edit, :id => project.to_param
+        assigns(:project).should == project
+        response.body.should match "#{project.name}"
+        response.body.should match "#{project.url}"
+      end
+    end
+    context "editing an sti project" do
+      it "assigns the type" do
+        stub_login_user
+        github_project = Factory(:github_project, :user => @user)
+        get :edit, :id => github_project.to_param
+        assigns(:project).type.should == "GithubProject"
+        response.body.should have_tag "select#project_type option[value=GithubProject][selected]"
+        response.body.should_not have_tag "select#project_type options[value=PivotalProject][selected]"
+      end
     end
   end
 
@@ -75,12 +104,12 @@ describe ProjectsController do
       it "creates a new Project" do
         stub_login_user
         expect {
-          post :create, :project => Factory.build(:project).attributes
+          post :create, :project => Factory.build(:github_project).attributes
         }.to change(Project.for_user(@user), :count).by(1)
-        assigns(:project).should be_a(Project)
+        assigns(:project).should be_a(GithubProject)
         assigns(:project).should be_persisted
         assigns(:project).user.should == @user
-        response.should redirect_to(Project.last)
+        response.should redirect_to(GithubProject.last)
       end
     end
 
@@ -99,7 +128,7 @@ describe ProjectsController do
     describe "with valid params" do
       it "updates the requested project" do
         stub_login_user
-        project = Factory.build(:project, :id => 1, :user => @user)
+        project = Factory.build(:github_project, :id => 1, :user => @user)
         find_mock = mock()
         find_mock.expects(:find_by_id).with(project.to_param).returns(project)
         Project.expects(:for_user).returns(find_mock)
@@ -112,16 +141,23 @@ describe ProjectsController do
       it "does not allow updating another users project" do
         user = Factory :user
         other_user = Factory :user
-        not_my_project = Factory :project, :user => other_user
+        not_my_project = Factory :github_project, :user => other_user
         put :update, :id => not_my_project.to_param, :project => {'name' => 'changeme'}
         response.should_not be_success
+      end
+      it "does not allow changing the type" do
+        stub_login_user
+        github_project = Factory(:github_project, :user => @user)
+        put :update, :id => github_project.to_param, :project => {'type' => 'PivotalTracker'}
+        response.should render_template :edit
+        response.body.should have_content "Cannot modify existing project's type"
       end
     end
 
     describe "with invalid params" do
       it "assigns the project as @project" do
         stub_login_user
-        project = Factory.build(:project, :id => 1, :user => @user)
+        project = Factory.build(:github_project, :id => 1, :user => @user)
         find_mock = mock()
         find_mock.expects(:find_by_id).with(project.to_param).returns(project)
         Project.expects(:for_user).returns(find_mock)
@@ -136,7 +172,7 @@ describe ProjectsController do
   describe "DELETE destroy" do
     it "destroys the requested project" do
       stub_login_user
-      project = Factory :project, :user => @user
+      project = Factory :github_project, :user => @user
       expect {
         delete :destroy, :id => project.to_param
       }.to change(Project.for_user(@user), :count).by(-1)
@@ -145,8 +181,8 @@ describe ProjectsController do
     it "doesn't allow deleting other user's projects" do
       user = Factory.build(:user, :id => 1)
       other_user = Factory.build(:user, :id => 2)
-      project = Factory :project, :user => other_user
-      expect { 
+      project = Factory :github_project, :user => other_user
+      expect {
         delete :destroy, :id => project.to_param
       }.to change(Project.all, :count).by(0)
       response.should_not be_success

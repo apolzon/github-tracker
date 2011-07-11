@@ -6,10 +6,13 @@
         - @project.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
+  %fieldset
+    = f.label :type
+    = f.select :type, options_for_select(Project.select_options, @project.type)
+  %fieldset
     = f.label :name
     = f.text_field :name
-  .field
+  %fieldset
     = f.label :url
     = f.text_field :url
   .hidden
