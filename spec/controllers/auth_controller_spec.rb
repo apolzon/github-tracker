@@ -10,6 +10,10 @@ describe AuthController do
       response.body.should have_content "Login"
       response.should have_tag :h1, "Login"
     end
+    it "has a link to the registration page" do
+      get :login
+      response.should have_tag "a", "click here to register"
+    end
   end
   describe "#authenticate" do
     it "logs the user in" do
