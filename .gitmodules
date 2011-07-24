@@ -1,3 +1,0 @@
-[submodule "vendor/plugins/jasmine-ajax"]
-	path = vendor/plugins/jasmine-ajax
-	url = https://github.com/pivotal/jasmine-ajax.git
