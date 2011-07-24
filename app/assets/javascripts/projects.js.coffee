@@ -4,4 +4,9 @@
 
 $ = jQuery
 $.fn.updateFormByType = ->
-  console.log "hi"
+  $("select", this).change ->
+    $.ajax
+      type: "GET",
+      url: "/projects/" + $(this).val()
+      success: (data) ->
+        console.log data
