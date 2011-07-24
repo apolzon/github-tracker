@@ -26,6 +26,7 @@ group :test do
   gem 'rails3-generators'
   gem 'rspec_tag_matchers'
   gem 'jasmine', :groups => [:development]
+  gem 'jasminerice', :groups => [:development]
 end
 
 # Use unicorn as the web server

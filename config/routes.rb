@@ -12,4 +12,8 @@ GithubTracker::Application.routes.draw do
   end
 
   root :to => 'auth#welcome'
+
+  if ["development", "test"].include? Rails.env
+    mount Jasminerice::Engine => "/jasmine"
+  end
 end

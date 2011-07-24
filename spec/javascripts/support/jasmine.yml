@@ -11,12 +11,7 @@
 #   - dist/**/*.js
 #
 src_files:
-  - public/javascripts/prototype.js
-  - public/javascripts/effects.js
-  - public/javascripts/controls.js
-  - public/javascripts/dragdrop.js
-  - public/javascripts/application.js
-  - public/javascripts/**/*.js
+  - assets/javascripts/application.js
 
 # stylesheets
 #
@@ -44,7 +39,6 @@ stylesheets:
 #
 helpers:
   - helpers/**/*.js
-  - ../../vendor/plugins/jasmine-ajax/lib/spec-helper.js
 
 # spec_files
 #
@@ -58,7 +52,6 @@ helpers:
 #
 spec_files:
   - '**/*[sS]pec.js'
-  - ../../vendor/plugins/jasmine-ajax/lib/mock-ajax.js
 
 # src_dir
 #
@@ -69,7 +62,8 @@ spec_files:
 #
 # src_dir: public
 #
-src_dir:
+src_dir: 
+  - app
 
 # spec_dir
 #
@@ -80,4 +74,5 @@ src_dir:
 #
 # spec_dir: spec/javascripts
 #
-spec_dir: spec/javascripts
+spec_dir: 
+  - spec/javascripts
