@@ -16,6 +16,8 @@ gem 'jquery-rails'
 gem 'haml-rails'
 gem 'compass', git: 'https://github.com/chriseppstein/compass.git', branch: 'rails31'
 
+gem 'pivotal-tracker'
+
 group :test do
   gem 'rspec-rails'
   gem 'capybara'
@@ -23,6 +25,7 @@ group :test do
   gem 'mocha'
   gem 'rails3-generators'
   gem 'rspec_tag_matchers'
+  gem 'jasmine', :groups => [:development]
 end
 
 # Use unicorn as the web server

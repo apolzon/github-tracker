@@ -61,6 +61,7 @@ describe ProjectsController do
   end
 
   describe "#new" do
+    # Will need javascript specs to allow fetching of the correct form
     it "assigns a new project as @project" do
       stub_login_user
       get :new

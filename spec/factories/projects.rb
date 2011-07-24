@@ -16,4 +16,5 @@ Factory.define :pivotal_project do |p|
   p.name "MyString"
   p.url "MyString"
   p.user { Factory :user }
+  p.api_token "MyToken"
 end
