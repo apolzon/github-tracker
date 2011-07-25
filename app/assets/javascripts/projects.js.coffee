@@ -9,4 +9,4 @@ $.fn.updateFormByType = ->
       type: "GET",
       url: "/projects/" + $(this).val()
       success: (data) ->
-        console.log data
+        $("form").html(data["content"])
