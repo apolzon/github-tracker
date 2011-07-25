@@ -27,6 +27,8 @@ group :test do
   gem 'rspec_tag_matchers'
   gem 'jasmine', :groups => [:development]
   gem 'jasminerice', :groups => [:development]
+  gem 'jasmine-headless-webkit', :groups => [:development]
+  gem 'guard-rails-assets', :groups => [:development]
 end
 
 # Use unicorn as the web server
